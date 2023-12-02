@@ -31,7 +31,7 @@ function Card({ image, name, status,category, starNumber, job, videoNumber, call
             <Link to={"/"}>
               <img
                 src={image}
-                className={`w-28 h-28 rounded-full ${status !== undefined ? `border-2 ${status === 1 ? 'border-blueOne' : 'border-redOne'}` : ''}`}
+                className={`w-28 h-28 rounded-full ${status !== undefined ? `border-2 ${status === 1 ? 'border-appointmentColor' : 'border-redOne'}` : ''}`}
                 alt=""
               />
             </Link>
