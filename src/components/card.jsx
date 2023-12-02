@@ -27,7 +27,7 @@ function Card({ image, name, status,category, starNumber, job, videoNumber, call
         <div className='flex h-full flex-col justify-between'>
           <div>
           <div className='relative imageArea w-full flex flex-col items-center justify-center'>
-            <span className={`absolute h-5 w-5 ${status ===1 ? 'bg-blueOne' : 'bg-redOne'} rounded-full top-4 point border-white border-4`} ></span>
+            <span className={`absolute h-5 w-5 ${status ===1 ? 'bg-appointmentColor' : 'bg-redOne'} rounded-full top-4 point border-white border-4`} ></span>
             <Link to={"/"}>
               <img
                 src={image}
