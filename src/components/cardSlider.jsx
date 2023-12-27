@@ -286,8 +286,7 @@ function CardSlider() {
       <MenuArea onButtonClick={handleButtonClick} />
       <div className="cardArea my-5 mx-auto max-w-screen-lg">
         <div
-          className={`previousButton flex justify-center items-center absolute left-8 top-1/2 `}
-          style={{ display: isMobile() ? "none" : "" }}
+          className={`previousButton flex justify-center items-center absolute left-8 top-1/2  max-[768px]:hidden`}
         >
           <button className="p-3">
             <i
@@ -339,8 +338,7 @@ function CardSlider() {
           ))}
         </Swiper>
         <div
-          className={`nextButton flex justify-center items-center absolute right-8 top-1/2`}
-          style={{ display: isMobile() ? "none" : "" }}
+          className={`nextButton flex justify-center items-center absolute right-8 top-1/2 max-[768px]:hidden`}
         >
           <button className="p-3">
             <i
