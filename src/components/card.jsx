@@ -39,7 +39,7 @@ function Card({
 
   return (
     <div>
-      <div className="generalCard bg-white border-2 w-80 text-center max-[768px]:mb-[40px] rounded-xl h-full justify-between flex flex-col px-4 py-2 min-w-xs max-w-md mx-auto">
+      <div className="generalCard ml-[20px] bg-white border-2 w-80 text-center max-[768px]:mb-[40px] rounded-xl h-full justify-between flex flex-col px-4 py-2 min-w-xs max-w-md mx-auto">
         <div className="favAndShareArea ml-auto">
           <div className="favAndShareButtons">
             <button

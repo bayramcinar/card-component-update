@@ -1,31 +1,19 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import Card from "../components/card";
 import MenuArea from "../components/menuArea";
 import PageHeader from "../components/pageHeader";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
 
 function CardSlider() {
   const [clickedButtonId, setClickedButtonId] = useState(null);
-
-  const handleButtonClick = (id) => {
-    // Menüler arasında geçiş yapıyor ve menü değiştiğinde scroll u en başa atıyor
-    setClickedButtonId(id);
-    if (cardAreaRef.current) {
-      cardAreaRef.current.scrollLeft = 0;
-      setIsAtLeftEdge(true);
-      setIsAtRightEdge(false);
-    }
-  };
-
-  useEffect(() => {}, [clickedButtonId]);
-
   const cardAreaRef = useRef(null);
   const [isAtLeftEdge, setIsAtLeftEdge] = useState(true);
   const [isAtRightEdge, setIsAtRightEdge] = useState(false);
+  const handleButtonClick = (id) => {
+    setClickedButtonId(id);
+    if (cardAreaRef.current) {
+      cardAreaRef.current.scrollLeft = 0;
+    }
+  };
 
   const employees = [
     {
@@ -269,24 +257,67 @@ function CardSlider() {
     },
   ];
 
-  function isMobile() {
-    // ekranın mobil olup olmadığını kontrol ediyor buna göre mobil ekranda sağ ve sol butonları kaldırıyor
-    const mediaQuery = window.matchMedia("(max-width: 500px)");
-    console.log(mediaQuery.matches);
-    return mediaQuery.matches;
-  }
-
   const filteredEmployees = clickedButtonId
     ? employees.filter((employee) => employee.category === clickedButtonId)
     : employees;
+
+  const scrollLeft = () => {
+    if (cardAreaRef.current) {
+      cardAreaRef.current.scrollLeft -= cardAreaRef.current.offsetWidth / 1.8;
+      setIsAtRightEdge(false);
+    }
+    const isAtLeftEdge = cardAreaRef.current.scrollLeft <= 0;
+    setIsAtLeftEdge(isAtLeftEdge);
+  };
+
+  const scrollRight = () => {
+    if (cardAreaRef.current) {
+      cardAreaRef.current.scrollLeft += cardAreaRef.current.offsetWidth / 1.8;
+      setIsAtLeftEdge(false);
+    }
+    const isAtRightEdge =
+      cardAreaRef.current.scrollLeft + cardAreaRef.current.offsetWidth >=
+      cardAreaRef.current.scrollWidth;
+    setIsAtRightEdge(isAtRightEdge);
+  };
+
+  const [isDragging, setIsDragging] = useState(false);
+  const [startScrollLeft, setStartScrollLeft] = useState(0);
+  const [startX, setStartX] = useState(0);
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setStartScrollLeft(cardAreaRef.current.scrollLeft);
+    setStartX(e.pageX);
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      e.preventDefault();
+      const deltaX = e.pageX - startX;
+      const newScrollLeft = startScrollLeft - deltaX;
+      cardAreaRef.current.scrollLeft = newScrollLeft;
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
 
   return (
     <div className="App bg-bgColour">
       <PageHeader />
       <MenuArea onButtonClick={handleButtonClick} />
-      <div className="cardArea my-5 mx-auto max-w-screen-lg">
+      <div
+        className="cardArea flex lg:overflow-hidden overflow-x-auto transition-all duration-1500 ease-in-out ml-auto mr-auto touch-pan-x max-w-screen-lg scroll-smooth select-none"
+        ref={cardAreaRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+      >
         <div
-          className={`previousButton flex justify-center items-center absolute left-8 top-1/2  max-[768px]:hidden`}
+          className={`previousButton flex justify-center items-center absolute left-8 top-1/2 max-[768px]:hidden`}
+          onClick={scrollLeft}
         >
           <button className="p-3">
             <i
@@ -296,49 +327,31 @@ function CardSlider() {
             ></i>
           </button>
         </div>
-        <Swiper
-          slidesPerView={isMobile() ? 1 : 3}
-          spaceBetween={10}
-          onSlideChange={(swiper) => {
-            setIsAtLeftEdge(swiper.isBeginning);
-            setIsAtRightEdge(swiper.isEnd);
-          }}
-          ref={cardAreaRef}
-          navigation={
-            isMobile()
-              ? false
-              : {
-                  prevEl: ".previousButton",
-                  nextEl: ".nextButton",
-                }
-          }
-          pagination={isMobile() ? true : false}
-          modules={isMobile() ? [Pagination] : [Navigation]}
-        >
-          {filteredEmployees.map((employee, index) => (
-            <SwiperSlide key={index}>
-              <Card
-                image={employee.image}
-                status={employee.status}
-                starNumber={employee.starNumber}
-                name={employee.name}
-                job={employee.job}
-                category={employee.category}
-                videoNumber={employee.videoNumber}
-                callNumber={employee.callNumber}
-                language={employee.language}
-                skills={employee.skills}
-                price={employee.price}
-                showedSkillsNumber={employee.showedSkillsNumber}
-                apointmentDate={employee.apointmentDate}
-                commentNumber={employee.commentNumber}
-                minSessionTime={employee.minSessionTime}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        {filteredEmployees.map((employee, index) => {
+          return (
+            <Card
+              key={index}
+              image={employee.image}
+              status={employee.status}
+              starNumber={employee.starNumber}
+              name={employee.name}
+              job={employee.job}
+              category={employee.category}
+              videoNumber={employee.videoNumber}
+              callNumber={employee.callNumber}
+              language={employee.language}
+              skills={employee.skills}
+              price={employee.price}
+              showedSkillsNumber={employee.showedSkillsNumber}
+              apointmentDate={employee.apointmentDate}
+              commentNumber={employee.commentNumber}
+              minSessionTime={employee.minSessionTime}
+            />
+          );
+        })}
         <div
           className={`nextButton flex justify-center items-center absolute right-8 top-1/2 max-[768px]:hidden`}
+          onClick={scrollRight}
         >
           <button className="p-3">
             <i
