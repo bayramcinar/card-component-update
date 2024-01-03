@@ -301,6 +301,7 @@ function CardSlider() {
       cardAreaRef.current.scrollLeft = newScrollLeft;
     }
   };
+
   const handleMouseUp = () => {
     if (isDragging) {
       setIsDragging(false);
@@ -324,7 +325,9 @@ function CardSlider() {
           ></i>
         </button>
         <div
-          className="cardArea flex lg:overflow-hidden snap-x overflow-x-auto transition-all duration-1500 ease-in-out ml-auto mr-auto touch-pan-x max-w-screen-lg scroll-smooth select-none "
+          className={`cardArea flex lg:overflow-hidden snap-x overflow-x-auto transition-all duration-1500 ease-in-out ml-auto mr-auto touch-pan-x max-w-screen-lg scroll-smooth select-none ${
+            isDragging ? "cursor-grabbing overflow-x-scroll" : "cursor-grab"
+          }`}
           ref={cardAreaRef}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
