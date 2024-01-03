@@ -255,15 +255,16 @@ function CardSlider() {
       commentNumber: 11,
       minSessionTime: 45,
     },
-  ];
+  ]; // HİZMET VERENLERİ ATAYACAĞIMIZ DEĞİŞKEN DATABASE DEN BURAYA GELECEK
 
   const filteredEmployees = clickedButtonId
     ? employees.filter((employee) => employee.category === clickedButtonId)
     : employees;
 
   const scrollLeft = () => {
+    const moveAmount = 340;
     if (cardAreaRef.current) {
-      cardAreaRef.current.scrollLeft -= cardAreaRef.current.offsetWidth / 1.8;
+      cardAreaRef.current.scrollLeft -= moveAmount;
       setIsAtRightEdge(false);
     }
     const isAtLeftEdge = cardAreaRef.current.scrollLeft <= 0;
@@ -271,8 +272,9 @@ function CardSlider() {
   };
 
   const scrollRight = () => {
+    const moveAmount = 340;
     if (cardAreaRef.current) {
-      cardAreaRef.current.scrollLeft += cardAreaRef.current.offsetWidth / 1.8;
+      cardAreaRef.current.scrollLeft += moveAmount;
       setIsAtLeftEdge(false);
     }
     const isAtRightEdge =
@@ -299,68 +301,68 @@ function CardSlider() {
       cardAreaRef.current.scrollLeft = newScrollLeft;
     }
   };
-
   const handleMouseUp = () => {
     setIsDragging(false);
   };
 
   return (
-    <div className="App bg-bgColour">
+    <div className="h-fit w-full bg-white pb-8">
       <PageHeader />
       <MenuArea onButtonClick={handleButtonClick} />
-      <div
-        className="cardArea flex lg:overflow-hidden overflow-x-auto transition-all duration-1500 ease-in-out ml-auto mr-auto touch-pan-x max-w-screen-lg scroll-smooth select-none"
-        ref={cardAreaRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-      >
-        <div
-          className={`previousButton flex justify-center items-center absolute left-8 top-1/2 max-[768px]:hidden`}
+      <div className="items-center gap-8 max-w-screen-xl mx-auto flex">
+        <button
           onClick={scrollLeft}
+          disabled={isAtLeftEdge}
+          className="p-3 hidden md:flex bg-secondary rounded-full disabled:opacity-25"
         >
-          <button className="p-3">
-            <i
-              className={`fa-solid fa-circle-left text-4xl ${
-                isAtLeftEdge ? "text-buttonEnd" : "text-buttonColor"
-              }`}
-            ></i>
-          </button>
-        </div>
-        {filteredEmployees.map((employee, index) => {
-          return (
-            <Card
-              key={index}
-              image={employee.image}
-              status={employee.status}
-              starNumber={employee.starNumber}
-              name={employee.name}
-              job={employee.job}
-              category={employee.category}
-              videoNumber={employee.videoNumber}
-              callNumber={employee.callNumber}
-              language={employee.language}
-              skills={employee.skills}
-              price={employee.price}
-              showedSkillsNumber={employee.showedSkillsNumber}
-              apointmentDate={employee.apointmentDate}
-              commentNumber={employee.commentNumber}
-              minSessionTime={employee.minSessionTime}
-            />
-          );
-        })}
+          <i
+            className={`fa-solid fa-circle-left text-4xl ${
+              isAtLeftEdge ? "text-buttonEnd" : "text-buttonColor"
+            }`}
+          ></i>
+        </button>
         <div
-          className={`nextButton flex justify-center items-center absolute right-8 top-1/2 max-[768px]:hidden`}
-          onClick={scrollRight}
+          className="cardArea flex lg:overflow-hidden snap-x overflow-x-auto transition-all duration-1500 ease-in-out ml-auto mr-auto touch-pan-x max-w-screen-lg scroll-smooth select-none "
+          ref={cardAreaRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
         >
-          <button className="p-3">
-            <i
-              className={`fa-solid fa-circle-right text-4xl ${
-                isAtRightEdge ? "text-buttonEnd" : "text-buttonColor"
-              }`}
-            ></i>
-          </button>
+          {filteredEmployees.map((employee, index) => {
+            return (
+              <Card
+                key={index}
+                image={employee.image}
+                status={employee.status}
+                starNumber={employee.starNumber}
+                name={employee.name}
+                job={employee.job}
+                category={employee.category}
+                videoNumber={employee.videoNumber}
+                callNumber={employee.callNumber}
+                language={employee.language}
+                skills={employee.skills}
+                price={employee.price}
+                showedSkillsNumber={employee.showedSkillsNumber}
+                apointmentDate={employee.apointmentDate}
+                commentNumber={employee.commentNumber}
+                minSessionTime={employee.minSessionTime}
+              />
+            );
+          })}
         </div>
+
+        <button
+          onClick={scrollRight}
+          disabled={isAtRightEdge}
+          className="p-3 hidden md:flex bg-secondary rounded-full disabled:opacity-25"
+        >
+          <i
+            className={`fa-solid fa-circle-right text-4xl ${
+              isAtRightEdge ? "text-buttonEnd" : "text-buttonColor"
+            }`}
+          ></i>
+        </button>
       </div>
     </div>
   );
