@@ -302,7 +302,9 @@ function CardSlider() {
     }
   };
   const handleMouseUp = () => {
-    setIsDragging(false);
+    if (isDragging) {
+      setIsDragging(false);
+    }
   };
 
   return (
